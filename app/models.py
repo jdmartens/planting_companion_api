@@ -1,5 +1,6 @@
 import uuid
-
+from typing import Optional
+from datetime import date
 from pydantic import EmailStr
 from sqlmodel import Field, Relationship, SQLModel
 
@@ -112,3 +113,16 @@ class TokenPayload(SQLModel):
 class NewPassword(SQLModel):
     token: str
     new_password: str = Field(min_length=8, max_length=40)
+
+class Plant(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: str
+    cultivar: Optional[str] = None
+    quantity: int
+    date: date
+    location: Optional[str] = None
+    days_to_germ: Optional[int] = None
+    days_to_maturity: Optional[int] = None
+    notes: Optional[str] = None
+    planting_depth: Optional[str] = None
+    spacing: Optional[str] = None
