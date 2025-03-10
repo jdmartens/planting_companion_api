@@ -10,10 +10,12 @@ from pydantic import (
     computed_field,
     model_validator,
 )
+from dotenv import load_dotenv
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing_extensions import Self
 
+load_dotenv()
 
 def parse_cors(v: Any) -> list[str] | str:
     if isinstance(v, str) and not v.startswith("["):
