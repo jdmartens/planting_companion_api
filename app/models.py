@@ -126,10 +126,6 @@ class PlantBase(SQLModel):
     notes: Optional[str] = None
     planting_depth: Optional[str] = None
     spacing: Optional[str] = None
-    sun_requirements: Optional[str] = None
-    water_requirements: Optional[str] = None
-    fertilizer_requirements: Optional[str] = None
-    harvest_date: Optional[date] = None
 
 
 # Properties to receive on plant creation
