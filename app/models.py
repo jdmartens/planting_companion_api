@@ -126,3 +126,25 @@ class Plant(SQLModel, table=True):
     notes: Optional[str] = None
     planting_depth: Optional[str] = None
     spacing: Optional[str] = None
+
+
+# Properties to receive on plant creation
+class PlantCreate(PlantBase):
+    pass
+
+# Properties to receive on plant update
+class PlantUpdate(PlantBase):
+    name: Optional[str] = None
+
+# Database model, database table inferred from class name
+class Plant(PlantBase, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    owner_id: Optional[uuid.UUID] = Field(default=None, foreign_key="user.id")
+
+# Properties to return via API, id is always required
+class PlantPublic(PlantBase):
+    id: int
+
+class PlantsPublic(SQLModel):
+    data: List[PlantPublic]
+    count: int
