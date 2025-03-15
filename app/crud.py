@@ -4,7 +4,7 @@ from typing import Any
 from sqlmodel import Session, select
 
 from app.core.security import get_password_hash, verify_password
-from app.models import Item, ItemCreate, User, UserCreate, UserUpdate
+from app.models import Item, ItemCreate, User, UserCreate, UserUpdate, Plant, PlantCreate, PlantUpdate
 
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:
@@ -52,3 +52,38 @@ def create_item(*, session: Session, item_in: ItemCreate, owner_id: uuid.UUID) -
     session.commit()
     session.refresh(db_item)
     return db_item
+
+
+# CRUD methods for Plant
+def create_plant(*, session: Session, plant_in: PlantCreate, owner_id: uuid.UUID) -> Plant:
+    db_plant = Plant.model_validate(plant_in, update={"owner_id": owner_id})
+    session.add(db_plant)
+    session.commit()
+    session.refresh(db_plant)
+    return db_plant
+
+
+def get_plant(*, session: Session, plant_id: uuid.UUID) -> Plant | None:
+    return session.get(Plant, plant_id)
+
+
+def get_plants(*, session: Session, skip: int = 0, limit: int = 100) -> list[Plant]:
+    statement = select(Plant).offset(skip).limit(limit)
+    return session.exec(statement).all()
+
+
+def update_plant(*, session: Session, db_plant: Plant, plant_in: PlantUpdate) -> Plant:
+    plant_data = plant_in.model_dump(exclude_unset=True)
+    db_plant.sqlmodel_update(plant_data)
+    session.add(db_plant)
+    session.commit()
+    session.refresh(db_plant)
+    return db_plant
+
+
+def delete_plant(*, session: Session, plant_id: uuid.UUID) -> Plant | None:
+    db_plant = session.get(Plant, plant_id)
+    if db_plant:
+        session.delete(db_plant)
+        session.commit()
+    return db_plant
