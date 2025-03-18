@@ -1,6 +1,6 @@
 import uuid
 from typing import Optional, List
-from datetime import date
+from datetime import date, datetime
 from pydantic import EmailStr
 from sqlmodel import Field, Relationship, SQLModel
 
@@ -147,4 +147,31 @@ class PlantPublic(PlantBase):
 
 class PlantsPublic(SQLModel):
     data: List[PlantPublic]
+    count: int
+
+
+class ReminderBase(SQLModel):
+    plant_id: uuid.UUID
+    reminder_type: str
+    remind_time: datetime
+    notes: Optional[str] = None
+
+class ReminderCreate(ReminderBase):
+    pass
+
+class ReminderUpdate(ReminderBase):
+    pass
+
+class Reminder(ReminderBase, table=True):
+    id: Optional[uuid.UUID] = Field(default_factory=uuid.uuid4, primary_key=True)
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class ReminderPublic(ReminderBase):
+    id: uuid.UUID
+    created_at: datetime
+    updated_at: datetime
+
+class RemindersPublic(SQLModel):
+    data: list[ReminderPublic]
     count: int
