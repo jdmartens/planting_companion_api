@@ -1,10 +1,11 @@
+from datetime import datetime
 import uuid
 from typing import Any
 
 from sqlmodel import Session, select
 
 from app.core.security import get_password_hash, verify_password
-from app.models import Item, ItemCreate, User, UserCreate, UserUpdate, Plant, PlantCreate, PlantUpdate
+from app.models import Item, ItemCreate, Reminder, ReminderCreate, ReminderUpdate, User, UserCreate, UserUpdate, Plant, PlantCreate, PlantUpdate
 
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:
@@ -87,3 +88,34 @@ def delete_plant(*, session: Session, plant_id: uuid.UUID) -> Plant | None:
         session.delete(db_plant)
         session.commit()
     return db_plant
+
+
+def create_reminder(*, session: Session, reminder_in: ReminderCreate) -> Reminder:
+    db_reminder = Reminder.model_validate(reminder_in)
+    session.add(db_reminder)
+    session.commit()
+    session.refresh(db_reminder)
+    return db_reminder
+
+def get_reminder(*, session: Session, reminder_id: uuid.UUID) -> Reminder | None:
+    return session.get(Reminder, reminder_id)
+
+def get_reminders(*, session: Session, skip: int = 0, limit: int = 100) -> list[Reminder]:
+    statement = select(Reminder).offset(skip).limit(limit)
+    return session.exec(statement).all()
+
+def update_reminder(*, session: Session, db_reminder: Reminder, reminder_in: ReminderUpdate) -> Reminder:
+    reminder_data = reminder_in.model_dump(exclude_unset=True)
+    reminder_data["updated_at"] = datetime.utcnow()
+    db_reminder.sqlmodel_update(reminder_data)
+    session.add(db_reminder)
+    session.commit()
+    session.refresh(db_reminder)
+    return db_reminder
+
+def delete_reminder(*, session: Session, reminder_id: uuid.UUID) -> Reminder | None:
+    db_reminder = session.get(Reminder, reminder_id)
+    if db_reminder:
+        session.delete(db_reminder)
+        session.commit()
+    return db_reminder
