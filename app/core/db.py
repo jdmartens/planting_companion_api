@@ -1,8 +1,9 @@
 from sqlmodel import Session, create_engine, select
+from datetime import datetime, timedelta
 
 from app import crud
 from app.core.config import settings
-from app.models import User, UserCreate, Plant, PlantCreate
+from app.models import Reminder, ReminderCreate, User, UserCreate, Plant, PlantCreate
 
 engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
 
@@ -67,3 +68,27 @@ def init_db(session: Session) -> None:
         if not plant:
             plant_in = PlantCreate(**plant_data)
             crud.create_plant(session=session, plant_in=plant_in, owner_id=user.id)
+
+    # Initial reminder data
+    initial_reminders = [
+        {
+            "plant_id": plant.id,
+            "reminder_type": "fertilization",
+            "remind_time": datetime.utcnow() + timedelta(days=30),
+            "notes": "Fertilize the plant"
+        },
+        {
+            "plant_id": plant.id,
+            "reminder_type": "water",
+            "remind_time": datetime.utcnow() + timedelta(days=7),
+            "notes": "Water the plant"
+        }
+    ]
+
+    for reminder_data in initial_reminders:
+        reminder = session.exec(
+            select(Reminder).where(Reminder.plant_id == reminder_data["plant_id"])
+        ).first()
+        if not reminder:
+            reminder_in = ReminderCreate(**reminder_data)
+            crud.create_reminder(session=session, reminder_in=reminder_in)
