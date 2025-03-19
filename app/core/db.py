@@ -1,5 +1,5 @@
 from sqlmodel import Session, create_engine, select
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from app import crud
 from app.core.config import settings
@@ -75,16 +75,17 @@ def init_db(session: Session) -> None:
         {
             "plant_id": plant.id,
             "reminder_type": "fertilization",
-            "remind_time": datetime.utcnow() + timedelta(days=30),
+            "remind_time": datetime.now(timezone.utc) + timedelta(days=30),
             "notes": "Fertilize the plant"
         },
         {
             "plant_id": plant.id,
             "reminder_type": "water",
-            "remind_time": datetime.utcnow() + timedelta(days=7),
+            "remind_time": datetime.now(timezone.utc) + timedelta(days=7),
             "notes": "Water the plant"
         }
     ]
+
 
     for reminder_data in initial_reminders:
         reminder = session.exec(
