@@ -60,17 +60,17 @@ def init_db(session: Session) -> None:
             "spacing": "3 inches"
         }
     ]
-    first_plant = session.exec(select(Plant)).first()
-    if not first_plant:
-        for plant_data in initial_plants:
-            plant = session.exec(
-                select(Plant).where(Plant.name == plant_data["name"])
-            ).first()
-            if not plant:
-                plant_in = PlantCreate(**plant_data)
-                crud.create_plant(session=session, plant_in=plant_in, owner_id=user.id)
+
+    for plant_data in initial_plants:
+        plant = session.exec(
+            select(Plant).where(Plant.name == plant_data["name"])
+        ).first()
+        if not plant:
+            plant_in = PlantCreate(**plant_data)
+            crud.create_plant(session=session, plant_in=plant_in, owner_id=user.id)
 
     # Initial reminder data
+    plant = session.exec(select(Plant)).first()
     initial_reminders = [
         {
             "plant_id": plant.id,
@@ -89,9 +89,5 @@ def init_db(session: Session) -> None:
     first_reminder = session.exec(select(Reminder)).first()
     if not first_reminder:
         for reminder_data in initial_reminders:
-            reminder = session.exec(
-                select(Reminder).where(Reminder.plant_id == reminder_data["plant_id"])
-            ).first()
-            if not reminder:
-                reminder_in = ReminderCreate(**reminder_data)
-                crud.create_reminder(session=session, reminder_in=reminder_in)
+            reminder_in = ReminderCreate(**reminder_data)
+            crud.create_reminder(session=session, reminder_in=reminder_in)
