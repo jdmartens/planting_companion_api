@@ -1,5 +1,6 @@
 import sentry_sdk
 from fastapi import FastAPI
+from app.scheduler import start_scheduler
 from fastapi.routing import APIRoute
 from starlette.middleware.cors import CORSMiddleware
 
@@ -31,3 +32,9 @@ if settings.all_cors_origins:
     )
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
+
+
+# Start the scheduler when the app starts
+@app.on_event("startup")
+def startup_event():
+    start_scheduler()
