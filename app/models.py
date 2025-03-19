@@ -138,7 +138,7 @@ class PlantUpdate(PlantBase):
 
 # Database model, database table inferred from class name
 class Plant(PlantBase, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     owner_id: Optional[uuid.UUID] = Field(default=None, foreign_key="user.id")
 
 # Properties to return via API, id is always required
