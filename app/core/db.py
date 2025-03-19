@@ -86,11 +86,12 @@ def init_db(session: Session) -> None:
         }
     ]
 
-
-    for reminder_data in initial_reminders:
-        reminder = session.exec(
-            select(Reminder).where(Reminder.plant_id == reminder_data["plant_id"])
-        ).first()
-        if not reminder:
-            reminder_in = ReminderCreate(**reminder_data)
-            crud.create_reminder(session=session, reminder_in=reminder_in)
+    first_reminder = session.exec(select(Reminder)).first()
+    if not first_reminder:
+        for reminder_data in initial_reminders:
+            reminder = session.exec(
+                select(Reminder).where(Reminder.plant_id == reminder_data["plant_id"])
+            ).first()
+            if not reminder:
+                reminder_in = ReminderCreate(**reminder_data)
+                crud.create_reminder(session=session, reminder_in=reminder_in)
