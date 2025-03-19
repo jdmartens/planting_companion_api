@@ -29,7 +29,7 @@ def start_scheduler():
     scheduler = BackgroundScheduler()
     scheduler.add_job(
         check_due_reminders,
-        trigger=IntervalTrigger(hours=1),  # Run every hour
+        trigger=IntervalTrigger(minutes=1), 
         id="check_due_reminders",
         replace_existing=True,
     )
