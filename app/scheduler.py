@@ -17,6 +17,9 @@ def check_due_reminders():
             select(Reminder).where(Reminder.remind_time <= now)
         ).all()
 
+        if not due_reminders:
+            print("No reminders due.")
+            return
         for reminder in due_reminders:
             # Log or handle the due reminders
             print(f"Reminder due: {reminder.reminder_type} for plant {reminder.plant_id} at {reminder.remind_time}")
