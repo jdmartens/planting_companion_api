@@ -13,17 +13,19 @@ ALGORITHM = "HS256"
 
 
 def create_access_token(
-    subject: str | Any, 
-    expires_delta: timedelta, 
-    full_name: str, 
-    email: str
+    user: Any, 
+    expires_delta: timedelta
 ) -> str:
+    """
+    Create a JWT access token with user fields.
+    """
     expire = datetime.now(timezone.utc) + expires_delta
     to_encode = {
         "exp": expire,
-        "sub": str(subject),
-        "full_name": full_name,
-        "email": email,
+        "sub": str(user.id),  # User ID as the subject
+        "full_name": user.full_name,
+        "email": user.email,
+        "is_superuser": user.is_superuser,
     }
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
