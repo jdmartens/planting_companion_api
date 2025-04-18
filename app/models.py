@@ -143,7 +143,7 @@ class Plant(PlantBase, table=True):
 
 # Properties to return via API, id is always required
 class PlantPublic(PlantBase):
-    id: int
+    id: uuid.UUID
 
 class PlantsPublic(SQLModel):
     data: List[PlantPublic]
