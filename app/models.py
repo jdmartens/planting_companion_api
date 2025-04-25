@@ -114,6 +114,7 @@ class NewPassword(SQLModel):
     token: str
     new_password: str = Field(min_length=8, max_length=40)
 
+
 # Shared properties
 class PlantBase(SQLModel):
     name: str
@@ -126,6 +127,7 @@ class PlantBase(SQLModel):
     notes: Optional[str] = None
     planting_depth: Optional[str] = None
     spacing: Optional[str] = None
+    life_cycle: Optional[str] = None
 
 
 # Properties to receive on plant creation
@@ -135,6 +137,7 @@ class PlantCreate(PlantBase):
 # Properties to receive on plant update
 class PlantUpdate(PlantBase):
     name: Optional[str] = None
+    life_cycle: Optional[str] = None
 
 # Database model, database table inferred from class name
 class Plant(PlantBase, table=True):
