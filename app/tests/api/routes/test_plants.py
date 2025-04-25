@@ -20,7 +20,8 @@ def test_create_plant(
         "days_to_maturity": 60,
         "notes": "Needs full sun",
         "planting_depth": "1 inch",
-        "spacing": "2 feet"
+        "spacing": "2 feet",
+        "life_cycle": "annual",
     }
     response = client.post(
         f"{settings.API_V1_STR}/plants/",
@@ -31,6 +32,7 @@ def test_create_plant(
     content = response.json()
     assert content["name"] == data["name"]
     assert content["cultivar"] == data["cultivar"]
+    assert content["life_cycle"] == data["life_cycle"]
     assert "id" in content
     assert "owner_id" in content
 
