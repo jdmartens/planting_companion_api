@@ -45,7 +45,8 @@ def init_db(session: Session) -> None:
             "days_to_maturity": 60,
             "notes": "Needs full sun",
             "planting_depth": "1 inch",
-            "spacing": "2 feet"
+            "spacing": "2 feet",
+            "life_cycle": "annual"
         },
         {
             "name": "Carrot",
@@ -57,7 +58,8 @@ def init_db(session: Session) -> None:
             "days_to_maturity": 70,
             "notes": "Needs loose soil",
             "planting_depth": "1/2 inch",
-            "spacing": "3 inches"
+            "spacing": "3 inches",
+            "life_cycle": "biennial"
         }
     ]
 
